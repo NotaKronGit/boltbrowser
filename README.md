@@ -13,7 +13,7 @@ Installing
 Install in the standard way:
 
 ```sh
-go get github.com/br0xen/boltbrowser
+go install github.com/Bevisy/boltbrowser@latest
 ```
 
 Then you'll have `boltbrowser` in your path.

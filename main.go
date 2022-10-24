@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/boltdb/bolt"
 	"github.com/nsf/termbox-go"
+	bolt "go.etcd.io/bbolt"
 )
 
 var ProgramName = "boltbrowser"
@@ -20,7 +20,7 @@ var memBolt *BoltDB
 
 var currentFilename string
 
-const DefaultDBOpenTimeout = time.Second
+const DefaultDBOpenTimeout = 5 * time.Second
 
 var AppArgs struct {
 	DBOpenTimeout time.Duration
@@ -68,10 +68,10 @@ func parseArgs() {
 				if val == "true" {
 					AppArgs.NoValue = true
 				}
-			case "-help":
+			case "-help", "--help", "-h":
 				printUsage(nil)
 			default:
-				printUsage(errors.New("Invalid option"))
+				printUsage(errors.New("invalid option"))
 			}
 		} else {
 			// Single-word arguments
@@ -80,10 +80,10 @@ func parseArgs() {
 				AppArgs.ReadOnly = true
 			case "-no-value":
 				AppArgs.NoValue = true
-			case "-help":
+			case "-help", "--help", "-h":
 				printUsage(nil)
 			default:
-				printUsage(errors.New("Invalid option"))
+				printUsage(errors.New("invalid option"))
 			}
 		}
 	}
@@ -94,7 +94,7 @@ func printUsage(err error) {
 		fmt.Fprintf(os.Stderr, err.Error())
 	}
 	fmt.Fprintf(os.Stderr, "Usage: %s [OPTIONS] <filename(s)>\nOptions:\n", ProgramName)
-	fmt.Fprintf(os.Stderr, "  -timeout=duration\n        DB file open timeout (default 1s)\n")
+	fmt.Fprintf(os.Stderr, "  -timeout=duration\n        DB file open timeout (default 5s)\n")
 	fmt.Fprintf(os.Stderr, "  -ro, -readonly   \n        Open the DB in read-only mode\n")
 	fmt.Fprintf(os.Stderr, "  -no-value        \n        Do not display a value in left pane\n")
 }
